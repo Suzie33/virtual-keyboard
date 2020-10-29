@@ -2,6 +2,7 @@ const Keyboard = {
   elements: {
     main: null,
     keysContainer: null,
+    textarea: null,
     keys: []
   },
 
@@ -19,6 +20,7 @@ const Keyboard = {
     // Create main elements
     this.elements.main = document.createElement("div");
     this.elements.keysContainer = document.createElement("div");
+    this.elements.textarea = document.querySelector(".keyboard-input");
 
     // Setup main elements
     this.elements.main.classList.add("keyboard", "keyboard--hidden");
@@ -31,12 +33,10 @@ const Keyboard = {
     this.elements.main.appendChild(this.elements.keysContainer);
     document.body.appendChild(this.elements.main);
 
-    // Automatically use keyboard for elements with .use-keyboard-input
-    document.querySelectorAll(".use-keyboard-input").forEach(element => {
-      element.addEventListener("focus", () => {
-        this.open(element.value, currentValue => {
-          element.value = currentValue;
-        });
+    // Open keyboard on focus
+    this.elements.textarea.addEventListener("focus", () => {
+      this.open(this.elements.textarea.value, currentValue => {
+        this.elements.textarea.value = currentValue;
       });
     });
   },
@@ -70,8 +70,14 @@ const Keyboard = {
           keyElement.innerHTML = createIconHTML("backspace");
 
           keyElement.addEventListener("click", () => {
-            this.properties.value = this.properties.value.substring(0, this.properties.value.length - 1);
+            let cursorPos = this.elements.textarea.selectionStart;
+            const left = this.elements.textarea.value.slice(0, cursorPos);
+            const right = this.elements.textarea.value.slice(cursorPos);
+
+            this.properties.value = left.substring(0, left.length - 1) + right;
             this._triggerEvent("oninput");
+            this.elements.textarea.focus();
+            this.elements.textarea.selectionStart = this.elements.textarea.selectionEnd = cursorPos - 1;
           });
 
           break;
@@ -83,6 +89,7 @@ const Keyboard = {
           keyElement.addEventListener("click", () => {
             this._toggleCapsLock();
             keyElement.classList.toggle("keyboard__key--active", this.properties.capsLock);
+            this.elements.textarea.focus();
           });
 
           break;
@@ -92,8 +99,14 @@ const Keyboard = {
           keyElement.innerHTML = createIconHTML("keyboard_return");
 
           keyElement.addEventListener("click", () => {
-            this.properties.value += "\n";
+            let cursorPos = this.elements.textarea.selectionStart;
+            const left = this.elements.textarea.value.slice(0, cursorPos);
+            const right = this.elements.textarea.value.slice(cursorPos);
+
+            this.properties.value = left + "\n" + right;
             this._triggerEvent("oninput");
+            this.elements.textarea.focus();
+            this.elements.textarea.selectionStart = this.elements.textarea.selectionEnd = cursorPos + 1;
           });
 
           break;
@@ -103,8 +116,14 @@ const Keyboard = {
           keyElement.innerHTML = createIconHTML("space_bar");
 
           keyElement.addEventListener("click", () => {
-            this.properties.value += " ";
+            let cursorPos = this.elements.textarea.selectionStart;
+            const left = this.elements.textarea.value.slice(0, cursorPos);
+            const right = this.elements.textarea.value.slice(cursorPos);
+
+            this.properties.value = left + " " + right;
             this._triggerEvent("oninput");
+            this.elements.textarea.focus();
+            this.elements.textarea.selectionStart = this.elements.textarea.selectionEnd = cursorPos + 1;
           });
 
           break;
@@ -124,9 +143,19 @@ const Keyboard = {
           keyElement.textContent = key.toLowerCase();
 
           keyElement.addEventListener("click", () => {
-            this.properties.value += this.properties.capsLock ? key.toUpperCase() : key.toLowerCase();
+            let cursorPos = this.elements.textarea.selectionStart;
+            const left = this.elements.textarea.value.slice(0, cursorPos);
+            const right = this.elements.textarea.value.slice(cursorPos);
+
+            if (this.properties.capsLock) {
+              this.properties.value =  left + key.toUpperCase() + right;
+            } else {
+              this.properties.value =  left + key.toLowerCase() + right;
+            }
+
             this._triggerEvent("oninput");
-            
+            this.elements.textarea.focus();
+            this.elements.textarea.selectionStart = this.elements.textarea.selectionEnd = cursorPos + 1;
           });
 
           break;

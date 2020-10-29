@@ -1,4 +1,4 @@
-.use-keyboard-input {
+.keyboard-input {
   display: block;
   width: 90%;
   margin: 30px auto;
@@ -6,6 +6,11 @@
   font-size: 20px;
   height: calc(100vh - 380px);
   min-height: 300px;
+  border: 2px solid rgba(0, 0, 0, 0.5);
+}
+
+.keyboard-input:focus {
+  outline: none;
 }
 
 .keyboard {
