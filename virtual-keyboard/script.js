@@ -52,28 +52,28 @@ const Keyboard = {
         "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "backspace",
         "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]", "done",
         "caps", "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", "enter",
-        "z", "x", "c", "v", "b", "n", "m", ",", ".", "/", "shift",
+        "shift", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/", "arrowLeft", "arrowRight",
         "en","space"
       ],
       [
         "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "backspace",
         "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "{", "}", "done",
         "caps", "a", "s", "d", "f", "g", "h", "j", "k", "l", ":", "\"", "enter",
-        "z", "x", "c", "v", "b", "n", "m", "<", ">", "?", "shift",
+        "shift", "z", "x", "c", "v", "b", "n", "m", "<", ">", "?", "arrowLeft", "arrowRight",
         "en","space"
       ],
       [
         "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "backspace",
         "й", "ц", "у", "к", "е", "н", "г", "ш", "щ", "з", "х", "ъ", "done",
         "caps", "ф", "ы", "в", "а", "п", "р", "о", "л", "д", "ж", "э", "enter",
-        "я", "ч", "с", "м", "и", "т", "ь", "б", "ю", ".", "shift",
+        "shift","я", "ч", "с", "м", "и", "т", "ь", "б", "ю", ".", "arrowLeft", "arrowRight",
         "ru","space"
       ],
       [
         "!", "\"", "№", ";", "%", ":", "?", "*", "(", ")", "backspace",
         "й", "ц", "у", "к", "е", "н", "г", "ш", "щ", "з", "х", "ъ", "done",
         "caps", "ф", "ы", "в", "а", "п", "р", "о", "л", "д", "ж", "э", "enter",
-        "я", "ч", "с", "м", "и", "т", "ь", "б", "ю", ",", "shift",
+        "shift","я", "ч", "с", "м", "и", "т", "ь", "б", "ю", ",", "arrowLeft", "arrowRight",
         "ru", "space"
       ]
     ];
@@ -85,7 +85,7 @@ const Keyboard = {
 
     keyLayout[0].forEach((key, ind) => {
       const keyElement = document.createElement("button");
-      const insertLineBreak = ["backspace", "done", "enter", "shift"].indexOf(key) !== -1;
+      const insertLineBreak = ["backspace", "done", "enter", "arrowRight"].indexOf(key) !== -1;
 
       // Add attributes/classes
       keyElement.setAttribute("type", "button");
@@ -184,7 +184,7 @@ const Keyboard = {
 
           keyElement.addEventListener("click", () => {
             this.properties.shift = false;
-            
+
             if (this.properties.language === 'en') {
               this.properties.language = 'ru';
             } else {
@@ -199,6 +199,30 @@ const Keyboard = {
 
           break;
 
+        case "arrowLeft":
+          keyElement.innerHTML = createIconHTML("arrow_back");
+
+          keyElement.addEventListener("click", () => {
+            let cursorPos = this.elements.textarea.selectionStart;
+
+            this.elements.textarea.focus();
+            this.elements.textarea.selectionStart = this.elements.textarea.selectionEnd = cursorPos - 1;
+          });
+  
+          break;
+
+        case "arrowRight":
+          keyElement.innerHTML = createIconHTML("arrow_forward");
+
+          keyElement.addEventListener("click", () => {
+            let cursorPos = this.elements.textarea.selectionStart;
+
+            this.elements.textarea.focus();
+            this.elements.textarea.selectionStart = this.elements.textarea.selectionEnd = cursorPos + 1;
+          });
+
+          break;
+        
         default:
           keyElement.textContent = key.toLowerCase();
 
