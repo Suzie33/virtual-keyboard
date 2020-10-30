@@ -13,7 +13,8 @@ const Keyboard = {
 
   properties: {
     value: "",
-    capsLock: false
+    capsLock: false,
+    shift: false
   },
 
   init() {
@@ -45,7 +46,7 @@ const Keyboard = {
     const fragment = document.createDocumentFragment();
     const keyLayout = [
       "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "backspace",
-      "q", "w", "e", "r", "t", "y", "u", "i", "o", "p",
+      "shift", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p",
       "caps", "a", "s", "d", "f", "g", "h", "j", "k", "l", "enter",
       "done", "z", "x", "c", "v", "b", "n", "m", ",", ".", "?",
       "space"
@@ -89,6 +90,18 @@ const Keyboard = {
           keyElement.addEventListener("click", () => {
             this._toggleCapsLock();
             keyElement.classList.toggle("keyboard__key--active", this.properties.capsLock);
+            this.elements.textarea.focus();
+          });
+
+          break;
+
+        case "shift":
+          keyElement.classList.add("keyboard__key--wide", "keyboard__key--activatable");
+          keyElement.innerHTML = createIconHTML("arrow_upward");
+
+          keyElement.addEventListener("click", () => {
+            this._toggleShift();
+            keyElement.classList.toggle("keyboard__key--active", this.properties.shift);
             this.elements.textarea.focus();
           });
 
@@ -182,7 +195,33 @@ const Keyboard = {
 
     for (const key of this.elements.keys) {
       if (key.childElementCount === 0) {
-        key.textContent = this.properties.capsLock ? key.textContent.toUpperCase() : key.textContent.toLowerCase();
+        if (this.properties.shift && !this.properties.capsLock) { // shift pressed, caps not pressed
+          key.textContent = key.textContent.toUpperCase();
+        } else if (this.properties.shift && this.properties.capsLock) { // shift pressed, caps pressed
+          key.textContent = key.textContent.toLowerCase();
+        } else if (!this.properties.shift && this.properties.capsLock) { // shift not pressed, caps pressed
+          key.textContent = key.textContent.toUpperCase();
+        } else { // shift not pressed, caps not pressed
+          key.textContent = key.textContent.toLowerCase();
+        }
+      }
+    }
+  },
+
+  _toggleShift() {
+    this.properties.shift = !this.properties.shift;
+
+    for (const key of this.elements.keys) {
+      if (key.childElementCount === 0) {
+        if (this.properties.shift && !this.properties.capsLock) { // shift pressed, caps not pressed
+          key.textContent = key.textContent.toUpperCase();
+        } else if (this.properties.shift && this.properties.capsLock) { // shift pressed, caps pressed
+          key.textContent = key.textContent.toLowerCase();
+        } else if (!this.properties.shift && this.properties.capsLock) { // shift not pressed, caps pressed
+          key.textContent = key.textContent.toUpperCase();
+        } else { // shift not pressed, caps not pressed
+          key.textContent = key.textContent.toLowerCase();
+        }
       }
     }
   },
