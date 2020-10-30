@@ -42,6 +42,11 @@ const Keyboard = {
         this.elements.textarea.value = currentValue;
       });
     });
+
+    // Setup lighting keys
+    this.elements.textarea.addEventListener("keydown", (e) => {
+      this._lightButtons(e.keyCode);
+    })
   },
 
   _createKeys() {
@@ -118,6 +123,13 @@ const Keyboard = {
             keyElement.classList.toggle("keyboard__key--active", this.properties.capsLock);
             this.elements.textarea.focus();
           });
+          this.elements.textarea.addEventListener("keydown", (e) => {
+            if (e.keyCode === 20) {
+              this._toggleCapsLock();
+              keyElement.classList.toggle("keyboard__key--active", this.properties.capsLock);
+              this.elements.textarea.focus();
+            }
+          })
 
           break;
 
@@ -130,6 +142,13 @@ const Keyboard = {
             keyElement.classList.toggle("keyboard__key--active", this.properties.shift);
             this.elements.textarea.focus();
           });
+          this.elements.textarea.addEventListener("keydown", (e) => {
+            if (e.keyCode === 16) {
+              this._toggleShift(keyLayout);
+              keyElement.classList.toggle("keyboard__key--active", this.properties.shift);
+              this.elements.textarea.focus();
+            }
+          })
 
           break;
 
@@ -346,6 +365,69 @@ const Keyboard = {
     this.elements.keys = this.elements.keysContainer.querySelectorAll(".keyboard__key");
   },
 
+  _lightButtons(code) {
+    const CODES_AND_INDEXES = {
+      49: 0,
+      50: 1,
+      51: 2,
+      52: 3,
+      53: 4,
+      54: 5,
+      55: 6,
+      56: 7,
+      57: 8,
+      48: 9,
+      8: 10, // 2nd row
+      81: 11,
+      87: 12,
+      69: 13,
+      82: 14,
+      84: 15,
+      89: 16,
+      85: 17,
+      73: 18,
+      79: 19,
+      80: 20,
+      219: 21,
+      221: 22,
+      20: 24, // 3rd row
+      65: 25,
+      83: 26,
+      68: 27,
+      70: 28,
+      71: 29,
+      72: 30,
+      74: 31,
+      75: 32,
+      76: 33,
+      186: 34,
+      222: 35,
+      13: 36,
+      16: 37, // 4d row
+      90: 38,
+      88: 39,
+      67: 40,
+      86: 41,
+      66: 42,
+      78: 43,
+      77: 44,
+      188: 45,
+      190: 46,
+      191: 47,
+      37: 48,
+      39: 49,
+      32: 51
+    }
+    let keyInd = CODES_AND_INDEXES[code];
+    this.elements.keys[keyInd].classList.add("keyboard__key--colored");
+
+    this.elements.textarea.addEventListener("keyup", (e) => {
+      if (e.keyCode === code) {
+        this.elements.keys[keyInd].classList.remove("keyboard__key--colored");
+      }
+    })
+  },
+
   open(initialValue, oninput, onclose) {
     this.properties.value = initialValue || "";
     this.eventHandlers.oninput = oninput;
@@ -358,7 +440,9 @@ const Keyboard = {
     this.eventHandlers.oninput = oninput;
     this.eventHandlers.onclose = onclose;
     this.elements.main.classList.add("keyboard--hidden");
-  }
+  },
+
+  
 };
 
 window.addEventListener("DOMContentLoaded", function () {
