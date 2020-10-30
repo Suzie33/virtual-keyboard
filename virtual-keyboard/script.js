@@ -15,7 +15,8 @@ const Keyboard = {
     value: "",
     capsLock: false,
     shift: false,
-    layoutInd: 0
+    layoutInd: 0,
+    language: "en"
   },
 
   init() {
@@ -45,28 +46,35 @@ const Keyboard = {
 
   _createKeys() {
     const fragment = document.createDocumentFragment();
-    const keyLayout1 = [
-      "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "backspace",
-      "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "done",
-      "caps", "a", "s", "d", "f", "g", "h", "j", "k", "l", "enter",
-      "z", "x", "c", "v", "b", "n", "m", ",", ".", "/", "shift",
-      "space"
-    ];
 
     const keyLayout = [
       [
         "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "backspace",
-        "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "done",
-        "caps", "a", "s", "d", "f", "g", "h", "j", "k", "l", "enter",
+        "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]", "done",
+        "caps", "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", "enter",
         "z", "x", "c", "v", "b", "n", "m", ",", ".", "/", "shift",
-        "space"
+        "en","space"
       ],
       [
         "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "backspace",
-        "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "done",
-        "caps", "a", "s", "d", "f", "g", "h", "j", "k", "l", "enter",
-        "z", "x", "c", "v", "b", "n", "m", ",", ".", "/", "shift",
-        "space"
+        "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "{", "}", "done",
+        "caps", "a", "s", "d", "f", "g", "h", "j", "k", "l", ":", "\"", "enter",
+        "z", "x", "c", "v", "b", "n", "m", "<", ">", "?", "shift",
+        "en","space"
+      ],
+      [
+        "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "backspace",
+        "й", "ц", "у", "к", "е", "н", "г", "ш", "щ", "з", "х", "ъ", "done",
+        "caps", "ф", "ы", "в", "а", "п", "р", "о", "л", "д", "ж", "э", "enter",
+        "я", "ч", "с", "м", "и", "т", "ь", "б", "ю", ".", "shift",
+        "ru","space"
+      ],
+      [
+        "!", "\"", "№", ";", "%", ":", "?", "*", "(", ")", "backspace",
+        "й", "ц", "у", "к", "е", "н", "г", "ш", "щ", "з", "х", "ъ", "done",
+        "caps", "ф", "ы", "в", "а", "п", "р", "о", "л", "д", "ж", "э", "enter",
+        "я", "ч", "с", "м", "и", "т", "ь", "б", "ю", ",", "shift",
+        "ru", "space"
       ]
     ];
 
@@ -118,7 +126,6 @@ const Keyboard = {
           keyElement.innerHTML = createIconHTML("arrow_upward");
 
           keyElement.addEventListener("click", () => {
-
             this._toggleShift(keyLayout);
             keyElement.classList.toggle("keyboard__key--active", this.properties.shift);
             this.elements.textarea.focus();
@@ -168,6 +175,27 @@ const Keyboard = {
             this.close();
             this._triggerEvent("onclose");
           });
+
+          break;
+
+        case "en":
+          keyElement.classList.add("keyboard__key--wide");
+          keyElement.textContent = this.properties.language.toUpperCase();
+
+          keyElement.addEventListener("click", () => {
+            this.properties.shift = false;
+            
+            if (this.properties.language === 'en') {
+              this.properties.language = 'ru';
+            } else {
+              this.properties.language = 'en';
+            }
+  
+            this._toggleLang(keyLayout);
+            keyElement.textContent = this.properties.language.toUpperCase();
+
+            this.elements.textarea.focus();
+          })
 
           break;
 
@@ -235,15 +263,23 @@ const Keyboard = {
     this.properties.shift = !this.properties.shift;
     const klEn = kl[0];
     const klShiftEn = kl[1];
+    const klRu = kl[2];
+    const klShiftRu = kl[3];
 
     this.elements.keys.forEach((key, i) => {
       if (key.childElementCount === 0) {
-        if (this.properties.shift) {
+        if (this.properties.shift && this.properties.language === 'en') { // en with shift
           this.properties.layoutInd = 1;
           key.textContent = klShiftEn[i];
-        } else {
+        } else if (!this.properties.shift && this.properties.language === 'en') { // en without shift
           this.properties.layoutInd = 0;
           key.textContent = klEn[i];
+        } else if (this.properties.shift && this.properties.language === 'ru') { // ru with shift
+          this.properties.layoutInd = 3;
+          key.textContent = klShiftRu[i];
+        } else {
+          this.properties.layoutInd = 2; //ru without shift
+          key.textContent = klRu[i];
         }
       }
     })
@@ -263,6 +299,27 @@ const Keyboard = {
         }
       }
     }
+  },
+
+  _toggleLang(kl) {
+    const klEn = kl[0];
+    const klShiftEn = kl[1];
+    const klRu = kl[2];
+    const klShiftRu = kl[3];
+
+    this.elements.keys.forEach((key, i) => {
+      if (key.childElementCount === 0) {
+        if (this.properties.language === 'en') {
+          this.properties.layoutInd = 0;
+          key.textContent = klEn[i];
+        } else {
+          this.properties.layoutInd = 2;
+          key.textContent = klRu[i];
+        }
+      }
+    })
+
+    this.elements.keys = this.elements.keysContainer.querySelectorAll(".keyboard__key");
   },
 
   open(initialValue, oninput, onclose) {
