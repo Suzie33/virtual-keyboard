@@ -220,6 +220,7 @@ const Keyboard = {
 
         case "arrowLeft":
           keyElement.innerHTML = createIconHTML("arrow_back");
+          keyElement.classList.add("keyboard__key--green");
 
           keyElement.addEventListener("click", () => {
             let cursorPos = this.elements.textarea.selectionStart;
@@ -232,6 +233,7 @@ const Keyboard = {
 
         case "arrowRight":
           keyElement.innerHTML = createIconHTML("arrow_forward");
+          keyElement.classList.add("keyboard__key--green");
 
           keyElement.addEventListener("click", () => {
             let cursorPos = this.elements.textarea.selectionStart;

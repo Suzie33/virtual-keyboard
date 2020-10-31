@@ -55,11 +55,6 @@
   position: relative;
 }
 
-.keyboard__key--colored {
-  background: rgba(187, 132, 168, 0.9);
-  transition: .1s;
-}
-
 .keyboard__key:hover {
   background: rgba(255, 255, 255, 0.15);
 }
@@ -95,4 +90,30 @@
 
 .keyboard__key--dark {
   background: rgba(0, 0, 0, 0.25);
+}
+
+.keyboard__key--green {
+  background: rgba(50, 120, 53, 0.9);
+}
+
+.keyboard__key--colored {
+  background: rgba(187, 132, 168, 0.9);
+  transition: .1s;
+}
+
+@media (max-width: 800px) {
+  .keyboard-input {
+    width: 95%;
+    height: 50vh;
+  }
+
+  .keyboard__key--wide {
+    width: 9%;
+    max-width: 90px;
+  }
+
+  .keyboard__key--activatable::after {
+    top: 5px;
+    right: 5px;
+  }
 }
