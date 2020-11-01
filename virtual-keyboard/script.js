@@ -527,10 +527,7 @@ const Keyboard = {
     recognition.lang = 'en-US';
     if (this.properties.language === 'ru') recognition.lang = 'ru';
 
-    console.log(recognition);
-
     recognition.addEventListener('result', e => {
-      console.log(this.properties.voice);
       if (this.properties.voice) {
         const transcript = Array.from(e.results)
         .map(result => result[0])
