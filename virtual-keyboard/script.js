@@ -274,7 +274,9 @@ const Keyboard = {
 
           keyElement.addEventListener("click", () => {
             this.properties.voice = !this.properties.voice;
-            this._voiceRecognition();
+            if (this.properties.voice) {
+              this._voiceRecognition();
+            }
             keyElement.classList.toggle("keyboard__key--active", this.properties.voice);
             this.elements.textarea.focus();
           });
@@ -518,8 +520,6 @@ const Keyboard = {
   },
 
   _voiceRecognition() {
-    if (!this.properties.voice) return;
-
     window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
     const recognition = new SpeechRecognition();
