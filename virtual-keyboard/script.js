@@ -17,7 +17,7 @@ const Keyboard = {
     shift: false,
     layoutInd: 0,
     language: "en",
-    sounds: false
+    sounds: true
   },
 
   init() {
@@ -209,7 +209,7 @@ const Keyboard = {
           keyElement.textContent = this.properties.language.toUpperCase();
 
           keyElement.addEventListener("click", () => {
-            this.properties.shift = false;
+            // this.properties.shift = false;
 
             if (this.properties.language === 'en') {
               this.properties.language = 'ru';
@@ -255,8 +255,8 @@ const Keyboard = {
           break;
 
         case "sounds":
-          keyElement.classList.add("keyboard__key--wide", "keyboard__key--activatable");
-          keyElement.innerHTML = createIconHTML("headset");
+          keyElement.classList.add("keyboard__key--wide", "keyboard__key--activatable", "keyboard__key--active");
+          keyElement.innerHTML = createIconHTML("volume_up");
 
           keyElement.addEventListener("click", () => {
             this.properties.sounds = !this.properties.sounds;
@@ -378,17 +378,37 @@ const Keyboard = {
 
     this.elements.keys.forEach((key, i) => {
       if (key.childElementCount === 0) {
-        if (this.properties.language === 'en') {
+        if (this.properties.language === 'en' && !this.properties.shift) {
           this.properties.layoutInd = 0;
           key.textContent = klEn[i];
-        } else {
+        } else if (this.properties.language === 'en' && this.properties.shift) {
+          this.properties.layoutInd = 1;
+          key.textContent = klShiftEn[i];
+        } else if (this.properties.language === 'ru' && !this.properties.shift) {
           this.properties.layoutInd = 2;
           key.textContent = klRu[i];
+        } else {
+          this.properties.layoutInd = 3;
+          key.textContent = klShiftRu[i];
         }
       }
     })
 
     this.elements.keys = this.elements.keysContainer.querySelectorAll(".keyboard__key");
+
+    for (const key of this.elements.keys) {
+      if (key.childElementCount === 0) {
+        if (this.properties.shift && !this.properties.capsLock) { // shift pressed, caps not pressed
+          key.textContent = key.textContent.toUpperCase();
+        } else if (this.properties.shift && this.properties.capsLock) { // shift pressed, caps pressed
+          key.textContent = key.textContent.toLowerCase();
+        } else if (!this.properties.shift && this.properties.capsLock) { // shift not pressed, caps pressed
+          key.textContent = key.textContent.toUpperCase();
+        } else { // shift not pressed, caps not pressed
+          key.textContent = key.textContent.toLowerCase();
+        }
+      }
+    }
   },
 
   _lightButtons(code) {
@@ -453,8 +473,6 @@ const Keyboard = {
       }
     })
   },
-
-
 
   _playSound(key) {
     if (!this.properties.sounds) return;
