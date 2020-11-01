@@ -16,7 +16,8 @@ const Keyboard = {
     capsLock: false,
     shift: false,
     layoutInd: 0,
-    language: "en"
+    language: "en",
+    sounds: false
   },
 
   init() {
@@ -58,28 +59,28 @@ const Keyboard = {
         "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]", "done",
         "caps", "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", "enter",
         "shift", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/", "arrowLeft", "arrowRight",
-        "en","space"
+        "en","space", "sounds"
       ],
       [
         "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "backspace",
         "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "{", "}", "done",
         "caps", "a", "s", "d", "f", "g", "h", "j", "k", "l", ":", "\"", "enter",
         "shift", "z", "x", "c", "v", "b", "n", "m", "<", ">", "?", "arrowLeft", "arrowRight",
-        "en","space"
+        "en","space", "sounds"
       ],
       [
         "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "backspace",
         "й", "ц", "у", "к", "е", "н", "г", "ш", "щ", "з", "х", "ъ", "done",
         "caps", "ф", "ы", "в", "а", "п", "р", "о", "л", "д", "ж", "э", "enter",
         "shift","я", "ч", "с", "м", "и", "т", "ь", "б", "ю", ".", "arrowLeft", "arrowRight",
-        "ru","space"
+        "ru","space", "sounds"
       ],
       [
         "!", "\"", "№", ";", "%", ":", "?", "*", "(", ")", "backspace",
         "й", "ц", "у", "к", "е", "н", "г", "ш", "щ", "з", "х", "ъ", "done",
         "caps", "ф", "ы", "в", "а", "п", "р", "о", "л", "д", "ж", "э", "enter",
         "shift","я", "ч", "с", "м", "и", "т", "ь", "б", "ю", ",", "arrowLeft", "arrowRight",
-        "ru", "space"
+        "ru", "space", "sounds"
       ]
     ];
 
@@ -249,6 +250,19 @@ const Keyboard = {
             this._playSound(key);
             this.elements.textarea.focus();
             this.elements.textarea.selectionStart = this.elements.textarea.selectionEnd = cursorPos + 1;
+          });
+
+          break;
+
+        case "sounds":
+          keyElement.classList.add("keyboard__key--wide", "keyboard__key--activatable");
+          keyElement.innerHTML = createIconHTML("headset");
+
+          keyElement.addEventListener("click", () => {
+            this.properties.sounds = !this.properties.sounds;
+            this._playSound(key);
+            keyElement.classList.toggle("keyboard__key--active", this.properties.sounds);
+            this.elements.textarea.focus();
           });
 
           break;
@@ -440,7 +454,11 @@ const Keyboard = {
     })
   },
 
+
+
   _playSound(key) {
+    if (!this.properties.sounds) return;
+
     const audioEn = document.querySelector('.audio_en');
     const audioRu = document.querySelector('.audio_ru');
     const audioEnter = document.querySelector('.audio_enter');
