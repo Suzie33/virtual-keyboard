@@ -102,6 +102,7 @@ const Keyboard = {
           keyElement.innerHTML = createIconHTML("backspace");
 
           keyElement.addEventListener("click", () => {
+            this._playSound(key);
             let cursorPos = this.elements.textarea.selectionStart;
             const left = this.elements.textarea.value.slice(0, cursorPos);
             const right = this.elements.textarea.value.slice(cursorPos);
@@ -120,6 +121,7 @@ const Keyboard = {
 
           keyElement.addEventListener("click", () => {
             this._toggleCapsLock();
+            this._playSound(key);
             keyElement.classList.toggle("keyboard__key--active", this.properties.capsLock);
             this.elements.textarea.focus();
           });
@@ -139,6 +141,7 @@ const Keyboard = {
 
           keyElement.addEventListener("click", () => {
             this._toggleShift(keyLayout);
+            this._playSound(key);
             keyElement.classList.toggle("keyboard__key--active", this.properties.shift);
             this.elements.textarea.focus();
           });
@@ -163,6 +166,7 @@ const Keyboard = {
 
             this.properties.value = left + "\n" + right;
             this._triggerEvent("oninput");
+            this._playSound(key);
             this.elements.textarea.focus();
             this.elements.textarea.selectionStart = this.elements.textarea.selectionEnd = cursorPos + 1;
           });
@@ -180,6 +184,7 @@ const Keyboard = {
 
             this.properties.value = left + " " + right;
             this._triggerEvent("oninput");
+            this._playSound(key);
             this.elements.textarea.focus();
             this.elements.textarea.selectionStart = this.elements.textarea.selectionEnd = cursorPos + 1;
           });
@@ -192,6 +197,7 @@ const Keyboard = {
 
           keyElement.addEventListener("click", () => {
             this.close();
+            this._playSound(key);
             this._triggerEvent("onclose");
           });
 
@@ -213,6 +219,7 @@ const Keyboard = {
             this._toggleLang(keyLayout);
             keyElement.textContent = this.properties.language.toUpperCase();
 
+            this._playSound(key);
             this.elements.textarea.focus();
           })
 
@@ -225,6 +232,7 @@ const Keyboard = {
           keyElement.addEventListener("click", () => {
             let cursorPos = this.elements.textarea.selectionStart;
 
+            this._playSound(key);
             this.elements.textarea.focus();
             this.elements.textarea.selectionStart = this.elements.textarea.selectionEnd = cursorPos - 1;
           });
@@ -238,6 +246,7 @@ const Keyboard = {
           keyElement.addEventListener("click", () => {
             let cursorPos = this.elements.textarea.selectionStart;
 
+            this._playSound(key);
             this.elements.textarea.focus();
             this.elements.textarea.selectionStart = this.elements.textarea.selectionEnd = cursorPos + 1;
           });
@@ -263,6 +272,7 @@ const Keyboard = {
             }
 
             this._triggerEvent("oninput");
+            this._playSound(key);
             this.elements.textarea.focus();
             this.elements.textarea.selectionStart = this.elements.textarea.selectionEnd = cursorPos + 1;
           });
@@ -428,6 +438,33 @@ const Keyboard = {
         this.elements.keys[keyInd].classList.remove("keyboard__key--colored");
       }
     })
+  },
+
+  _playSound(key) {
+    const audioEn = document.querySelector('.audio_en');
+    const audioRu = document.querySelector('.audio_ru');
+    const audioEnter = document.querySelector('.audio_enter');
+    const audioCaps = document.querySelector('.audio_caps');
+    const audioShift = document.querySelector('.audio_shift');
+    const audioBackspace = document.querySelector('.audio_back');
+
+    audioRu.currentTime = 0;
+
+    if (key === 'enter') {
+      audioEnter.play();
+    } else if (key === 'caps') {
+      audioCaps.play();
+    } else if (key === 'shift') {
+      audioShift.play();
+    } else if (key === 'backspace') {
+      audioBackspace.play();
+    } else {
+      if (this.properties.language === "en") {
+        audioEn.play();
+      } else {
+        audioRu.play();
+      }
+    }
   },
 
   open(initialValue, oninput, onclose) {
