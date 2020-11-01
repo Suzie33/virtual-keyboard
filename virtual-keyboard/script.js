@@ -525,25 +525,30 @@ const Keyboard = {
     const recognition = new SpeechRecognition();
     recognition.interimResults = true;
     recognition.lang = 'en-US';
+    if (this.properties.language === 'ru') recognition.lang = 'ru';
+
+    console.log(recognition);
 
     recognition.addEventListener('result', e => {
-      const transcript = Array.from(e.results)
-      .map(result => result[0])
-      .map(result => result.transcript)
-      .join('');
-
-      if (e.results[0].isFinal) {
-        console.log(transcript);
-        let cursorPos = this.elements.textarea.selectionStart;
-        const left = this.elements.textarea.value.slice(0, cursorPos);
-        const right = this.elements.textarea.value.slice(cursorPos);
-
-        this.properties.value = left + transcript + " " + right;
-        this._triggerEvent("oninput");
-        this.elements.textarea.selectionStart = this.elements.textarea.selectionEnd = cursorPos + transcript.length + 1;
+      console.log(this.properties.voice);
+      if (this.properties.voice) {
+        const transcript = Array.from(e.results)
+        .map(result => result[0])
+        .map(result => result.transcript)
+        .join('');
+  
+        if (e.results[0].isFinal) {
+          let cursorPos = this.elements.textarea.selectionStart;
+          const left = this.elements.textarea.value.slice(0, cursorPos);
+          const right = this.elements.textarea.value.slice(cursorPos);
+  
+          this.properties.value = left + transcript + " " + right;
+          this._triggerEvent("oninput");
+          this.elements.textarea.selectionStart = this.elements.textarea.selectionEnd = cursorPos + transcript.length + 1;
+        }
       }
     })
-
+    
     recognition.addEventListener('end', () => {
       if (this.properties.voice) {
         recognition.start();
@@ -565,8 +570,6 @@ const Keyboard = {
     this.eventHandlers.onclose = onclose;
     this.elements.main.classList.add("keyboard--hidden");
   },
-
-  
 };
 
 window.addEventListener("DOMContentLoaded", function () {
