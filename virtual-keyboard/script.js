@@ -118,6 +118,7 @@ const Keyboard = {
           break;
 
         case "caps":
+          keyElement.setAttribute('title', 'CapsLock');
           keyElement.classList.add("keyboard__key--wide", "keyboard__key--activatable");
           keyElement.innerHTML = createIconHTML("keyboard_capslock");
 
@@ -138,6 +139,7 @@ const Keyboard = {
           break;
 
         case "shift":
+          keyElement.setAttribute('title', 'Shift');
           keyElement.classList.add("keyboard__key--wide", "keyboard__key--activatable");
           keyElement.innerHTML = createIconHTML("arrow_upward");
 
@@ -158,6 +160,7 @@ const Keyboard = {
           break;
 
         case "enter":
+          keyElement.setAttribute('title', 'Enter');
           keyElement.classList.add("keyboard__key--wide");
           keyElement.innerHTML = createIconHTML("keyboard_return");
 
@@ -194,6 +197,7 @@ const Keyboard = {
           break;
 
         case "done":
+          keyElement.setAttribute('title', 'Hide keyboard');
           keyElement.classList.add("keyboard__key--wide", "keyboard__key--dark");
           keyElement.innerHTML = createIconHTML("check_circle");
 
@@ -206,6 +210,7 @@ const Keyboard = {
           break;
 
         case "en":
+          keyElement.setAttribute('title', 'en/ru');
           keyElement.classList.add("keyboard__key--wide");
           keyElement.textContent = this.properties.language.toUpperCase();
 
@@ -256,6 +261,7 @@ const Keyboard = {
           break;
 
         case "sounds":
+          keyElement.setAttribute('title', 'Keyboard sounds');
           keyElement.classList.add("keyboard__key--wide", "keyboard__key--activatable", "keyboard__key--active");
           keyElement.innerHTML = createIconHTML("volume_up");
 
@@ -269,6 +275,7 @@ const Keyboard = {
           break;
 
         case "voice":
+          keyElement.setAttribute('title', 'Voice recognition');
           keyElement.classList.add("keyboard__key--wide", "keyboard__key--activatable");
           keyElement.innerHTML = createIconHTML("keyboard_voice");
 
