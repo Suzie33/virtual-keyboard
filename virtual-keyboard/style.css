@@ -2,9 +2,10 @@
   display: block;
   width: 90%;
   margin: 30px auto;
+  margin-top: 15px;
   padding: 10px;
   font-size: 20px;
-  height: calc(100vh - 380px);
+  height: calc(100vh - 580px);
   min-height: 300px;
   border: 2px solid rgba(0, 0, 0, 0.5);
 }
@@ -101,6 +102,11 @@
   transition: .1s;
 }
 
+.tooltip {
+  margin: 0;
+  margin-bottom: 10px;
+}
+
 @media (max-width: 800px) {
   .keyboard-input {
     width: 95%;
@@ -115,5 +121,9 @@
   .keyboard__key--activatable::after {
     top: 5px;
     right: 5px;
+  }
+
+  .tooltip {
+    display: none;
   }
 }
